@@ -315,7 +315,7 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem}
         <div class="pfoot">
           <p class="pprice">130 <span>DH</span></p>
           <div class="qw"><button class="qb" onclick="chQ('sun',-1)">−</button><span class="qv" id="q-sun">1</span><button class="qb" onclick="chQ('sun',1)">+</button></div>
-          <button class="ab" id="ab-sun" onclick="addCart('sun','Sunscreen SPF50+',130)">🛒 <span data-k="add">Add</span></button>
+          <button class="ab" id="ab-sun" onclick="addCart('sun','Sunscreen SPF50+',130,'ecran1.jpg')">🛒 <span data-k="add">Add</span></button>
         </div>
       </div>
     </div>
@@ -336,7 +336,7 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem}
         <div class="pfoot">
           <p class="pprice">75 <span>DH</span></p>
           <div class="qw"><button class="qb" onclick="chQ('cls',-1)">−</button><span class="qv" id="q-cls">1</span><button class="qb" onclick="chQ('cls',1)">+</button></div>
-          <button class="ab" id="ab-cls" onclick="addCart('cls','Cleanser',75)">🛒 <span data-k="add">Add</span></button>
+          <button class="ab" id="ab-cls" onclick="addCart('cls','Cleanser',75,'gel2.jpg')">🛒 <span data-k="add">Add</span></button>
         </div>
       </div>
     </div>
@@ -357,7 +357,7 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem}
         <div class="pfoot">
           <p class="pprice">65 <span>DH</span></p>
           <div class="qw"><button class="qb" onclick="chQ('nc',-1)">−</button><span class="qv" id="q-nc">1</span><button class="qb" onclick="chQ('nc',1)">+</button></div>
-          <button class="ab" id="ab-nc" onclick="addCart('nc','Night Cream',65)">🛒 <span data-k="add">Add</span></button>
+          <button class="ab" id="ab-nc" onclick="addCart('nc','Night Cream',65,'nuit1.jpg')">🛒 <span data-k="add">Add</span></button>
         </div>
       </div>
     </div>
@@ -378,7 +378,7 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem}
         <div class="pfoot">
           <p class="pprice">75 <span>DH</span></p>
           <div class="qw"><button class="qb" onclick="chQ('deo',-1)">−</button><span class="qv" id="q-deo">1</span><button class="qb" onclick="chQ('deo',1)">+</button></div>
-          <button class="ab" id="ab-deo" onclick="addCart('deo','Déo Baume',75)">🛒 <span data-k="add">Add</span></button>
+          <button class="ab" id="ab-deo" onclick="addCart('deo','Déo Baume',75,'deo1.jpg')">🛒 <span data-k="add">Add</span></button>
         </div>
       </div>
     </div>
@@ -399,7 +399,7 @@ footer{background:var(--text);color:rgba(255,255,255,.5);padding:3rem}
         <div class="pfoot">
           <p class="pprice">75 <span>DH</span></p>
           <div class="qw"><button class="qb" onclick="chQ('ho',-1)">−</button><span class="qv" id="q-ho">1</span><button class="qb" onclick="chQ('ho',1)">+</button></div>
-          <button class="ab" id="ab-ho" onclick="addCart('ho','Hair Growth Oil',95)">🛒 <span data-k="add">Add</span></button>
+          <button class="ab" id="ab-ho" onclick="addCart('ho','Hair Growth Oil',75,'oil.jpg')">🛒 <span data-k="add">Add</span></button>
         </div>
       </div>
     </div>
@@ -552,9 +552,9 @@ function setLang(l,btn){
 /* ── CART ── */
 let cart={};
 function chQ(id,d){const el=document.getElementById('q-'+id);let v=parseInt(el.textContent)+d;if(v<1)v=1;el.textContent=v;}
-function addCart(id,name,price){
+function addCart(id,name,price,img){
   const qty=parseInt(document.getElementById('q-'+id).textContent);
-  cart[id]?cart[id].qty+=qty:cart[id]={name,price,qty};
+  cart[id]?cart[id].qty+=qty:cart[id]={name,price,qty,img};
   updateBadge();renderCart();
   const b=document.getElementById('ab-'+id);b.classList.add('done');setTimeout(()=>b.classList.remove('done'),700);
   toast(T[lang].added||'Added!');
@@ -570,7 +570,7 @@ function renderCart(){
   const t=T[lang];const its=Object.entries(cart);
   if(!its.length){wrap.innerHTML=`<div class="cemp"><svg width="64" height="64" fill="none" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="1.5"/><path d="M22 28h20l-3 12H25L22 28z" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="27" cy="44" r="2" fill="currentColor"/><circle cx="37" cy="44" r="2" fill="currentColor"/></svg><p>${t.emp}</p></div>`;foot.style.display='none';return;}
   let sub=0;
-  wrap.innerHTML=its.map(([id,it])=>{sub+=it.price*it.qty;return`<div class="citem"><div class="ciimg">img</div><div class="cinfo"><p class="ciname">${it.name}</p><p class="ciprice">${it.price} DH × ${it.qty} = ${it.price*it.qty} DH</p><div class="ciq"><button class="ciqb" onclick="cqChange('${id}',-1)">−</button><span class="ciqv">${it.qty}</span><button class="ciqb" onclick="cqChange('${id}',1)">+</button></div></div><button class="rmb" onclick="cqRemove('${id}')">✕</button></div>`;}).join('');
+  wrap.innerHTML=its.map(([id,it])=>{sub+=it.price*it.qty;return`<div class="citem"><div class="ciimg">${it.img?`<img src="${it.img}" alt="${it.name}">`:'<span>📦</span>'}</div><div class="cinfo"><p class="ciname">${it.name}</p><p class="ciprice">${it.price} DH × ${it.qty} = ${it.price*it.qty} DH</p><div class="ciq"><button class="ciqb" onclick="cqChange('${id}',-1)">−</button><span class="ciqv">${it.qty}</span><button class="ciqb" onclick="cqChange('${id}',1)">+</button></div></div><button class="rmb" onclick="cqRemove('${id}')">✕</button></div>`;}).join('');
   document.getElementById('subv').textContent=sub+' DH';
   document.getElementById('totv').textContent=(sub+30)+' DH';
   foot.style.display='block';
